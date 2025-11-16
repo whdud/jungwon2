@@ -1,0 +1,1490 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>정원지역아동센터</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            line-height: 1.6;
+            color: #1a1a1a;
+            background-color: #fff;
+        }
+        
+        /* 네비게이션 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            z-index: 1000;
+            padding: 1.5rem 0;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 3rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 3rem;
+        }
+        
+        /* 햄버거 메뉴 버튼 */
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            gap: 6px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 8px;
+            z-index: 1001;
+        }
+        
+        .menu-toggle span {
+            width: 28px;
+            height: 3px;
+            background: #1a1a1a;
+            transition: all 0.3s ease;
+            border-radius: 3px;
+        }
+        
+        .menu-toggle.active span:nth-child(1) {
+            transform: rotate(45deg) translate(8px, 8px);
+        }
+        
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+        
+        .menu-toggle.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(8px, -8px);
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 3rem;
+        }
+        
+        nav a {
+            text-decoration: none;
+            color: #4a4a4a;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav a:hover {
+            color: #ea7c69;
+        }
+        
+        /* 히어로 섹션 */
+        .hero {
+            margin-top: 80px;
+            padding: 8rem 3rem;
+            background: linear-gradient(rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.5)), url('image/u7845459758_warm_sunlight_filtering_through_trees_people_hold_838d51f2-d57b-4f19-bad8-89f37b067736_1 (1).png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            text-align: center;
+            position: relative;
+            transition: opacity 0.1s ease-out;
+        }
+        
+        .hero-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .hero-subtitle {
+            font-size: 0.95rem;
+            color: #ea7c69;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            letter-spacing: -2px;
+        }
+        
+        .hero p {
+            font-size: 1.3rem;
+            color: #666;
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto 3rem;
+        }
+        
+        /* 통계 섹션 */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 6rem 3rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 4rem;
+            font-weight: 700;
+            color: #ea7c69;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .stat-label {
+            font-size: 1.1rem;
+            color: #4a4a4a;
+            font-weight: 500;
+        }
+        
+        /* 섹션 공통 */
+        section {
+            padding: 8rem 3rem;
+        }
+        
+        .section-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .section-header {
+            max-width: 800px;
+            margin-bottom: 5rem;
+        }
+        
+        .section-tag {
+            font-size: 0.9rem;
+            color: #ea7c69;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1rem;
+            display: inline-block;
+        }
+        
+        .section-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            letter-spacing: -1.5px;
+        }
+        
+        .section-description {
+            font-size: 1.2rem;
+            color: #666;
+            line-height: 1.8;
+        }
+        
+        /* 배경색 */
+        .bg-light {
+            background: #fafafa;
+        }
+        
+        /* 그리드 레이아웃 */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 3rem;
+        }
+        
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3rem;
+        }
+        
+        .grid-4 {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2.5rem;
+        }
+        
+        /* 카드 */
+        .card {
+            background: #fff;
+            padding: 3rem;
+            border-radius: 12px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid #e8e8e8;
+        }
+        
+        .card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.12);
+            border-color: #ea7c69;
+        }
+        
+        .card:hover .card-title {
+            color: #ea7c69;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .card-text {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        .card-list {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+        
+        .card-list li {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 2;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        
+        .card-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #ea7c69;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        /* 목적 섹션 */
+        .purpose-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        
+        .purpose-text {
+            font-size: 1.2rem;
+            color: #4a4a4a;
+            line-height: 2;
+            margin-bottom: 2rem;
+        }
+        
+        /* 연혁 */
+        .timeline {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .timeline-item {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 4rem;
+            margin-bottom: 4rem;
+            padding-bottom: 4rem;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .timeline-item:last-child {
+            border-bottom: none;
+        }
+        
+        .timeline-year {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ea7c69;
+            letter-spacing: -1px;
+        }
+        
+        .timeline-content ul {
+            list-style: none;
+        }
+        
+        .timeline-content li {
+            font-size: 1.05rem;
+            color: #4a4a4a;
+            line-height: 1.9;
+            margin-bottom: 0.8rem;
+            padding-left: 1.8rem;
+            position: relative;
+        }
+        
+        .timeline-content li:before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 0.7rem;
+            width: 6px;
+            height: 6px;
+            background: #ea7c69;
+            border-radius: 50%;
+        }
+        
+        /* 네트워크 태그 */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        /* 공지사항 */
+        .notice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+        }
+        
+        .notice-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-radius: 12px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .notice-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-color: #ea7c69;
+        }
+        
+        .notice-date {
+            font-size: 0.9rem;
+            color: #ea7c69;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .notice-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 1rem;
+            line-height: 1.4;
+        }
+        
+        .notice-content {
+            font-size: 1rem;
+            color: #666;
+            line-height: 1.7;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        .notice-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background: #ea7c69;
+            color: white;
+            font-size: 0.75rem;
+            font-weight: 600;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .notice-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+        
+        .notice-empty h3 {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+        
+        /* 네트워크 태그 */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .tag {
+            padding: 1rem 2rem;
+            background: #fff;
+            color: #4a4a4a;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border-radius: 50px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        
+        .tag:hover {
+            background: #ea7c69;
+            color: white;
+            border-color: #ea7c69;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 16px rgba(234, 124, 105, 0.25);
+        }
+        
+        /* CTA 섹션 */
+        .cta-section {
+            background: linear-gradient(135deg, #ea7c69 0%, #d4614f 100%);
+            color: white;
+            text-align: center;
+            padding: 8rem 3rem;
+        }
+        
+        .cta-section .section-title {
+            color: white;
+        }
+        
+        .cta-section .section-description {
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 3rem;
+        }
+        
+        .contact-info {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 4rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .contact-item {
+            text-align: center;
+        }
+        
+        .contact-item h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            opacity: 0.95;
+        }
+        
+        .contact-item p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            opacity: 0.85;
+        }
+        
+        /* 푸터 */
+        footer {
+            background: #1a1a1a;
+            color: #999;
+            text-align: center;
+            padding: 3rem;
+            font-size: 0.9rem;
+        }
+        
+        footer p {
+            margin-bottom: 0.5rem;
+        }
+        
+        footer a {
+            transition: color 0.3s ease;
+        }
+        
+        footer a:hover {
+            color: #ea7c69;
+        }
+        
+        /* 지도 */
+        .map-container {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+        
+        .map-container iframe {
+            width: 100%;
+            height: 450px;
+            border: none;
+        }
+        
+        /* 애니메이션 */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        .animate-on-scroll {
+            opacity: 0;
+        }
+        
+        .animate-on-scroll.animated {
+            animation-duration: 0.8s;
+            animation-fill-mode: both;
+            animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .fade-in-up {
+            animation-name: fadeInUp;
+        }
+        
+        .fade-in {
+            animation-name: fadeIn;
+        }
+        
+        .slide-in-left {
+            animation-name: slideInLeft;
+        }
+        
+        .slide-in-right {
+            animation-name: slideInRight;
+        }
+        
+        .scale-in {
+            animation-name: scaleIn;
+        }
+        
+        .delay-1 { animation-delay: 0.1s; }
+        .delay-2 { animation-delay: 0.2s; }
+        .delay-3 { animation-delay: 0.3s; }
+        .delay-4 { animation-delay: 0.4s; }
+        
+        /* 히어로 애니메이션 */
+        .hero-content > * {
+            animation: fadeInUp 1s cubic-bezier(0.4, 0, 0.2, 1) both;
+        }
+        
+        .hero-subtitle {
+            animation-delay: 0.2s;
+        }
+        
+        .hero h1 {
+            animation-delay: 0.4s;
+        }
+        
+        .hero p {
+            animation-delay: 0.6s;
+        }
+        
+        /* 부드러운 스크롤 */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* 반응형 */
+        @media (max-width: 1200px) {
+            .stats,
+            .grid-3,
+            .grid-4 {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav {
+                padding: 1rem 0;
+            }
+            
+            .nav-container {
+                padding: 0 1.5rem;
+            }
+            
+            /* 햄버거 버튼 보이기 */
+            .menu-toggle {
+                display: flex;
+            }
+            
+            /* 모바일 메뉴 */
+            nav ul {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 80%;
+                max-width: 300px;
+                height: 100vh;
+                background: white;
+                flex-direction: column;
+                gap: 0;
+                padding: 6rem 2rem 2rem;
+                box-shadow: -5px 0 20px rgba(0, 0, 0, 0.1);
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                z-index: 1000;
+            }
+            
+            nav ul.active {
+                right: 0;
+            }
+            
+            nav li {
+                width: 100%;
+                margin: 0;
+            }
+            
+            nav a {
+                display: block;
+                padding: 1.2rem 0;
+                font-size: 1.1rem;
+                border-bottom: 1px solid #f0f0f0;
+            }
+            
+            nav a:hover {
+                color: #ea7c69;
+                padding-left: 1rem;
+            }
+            
+            /* 메뉴 오버레이 */
+            .menu-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.5);
+                z-index: 999;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .menu-overlay.active {
+                display: block;
+                opacity: 1;
+            }
+            
+            .hero {
+                padding: 5rem 1.5rem;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            
+            section {
+                padding: 5rem 1.5rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .stats,
+            .grid-2,
+            .grid-3,
+            .grid-4,
+            .contact-info {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .timeline-item {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            
+            .stat-number {
+                font-size: 3rem;
+            }
+            
+            .map-container iframe {
+                height: 350px;
+            }
+            
+            .section-container > div[style*="grid-template-columns: repeat(2, 1fr)"] {
+                grid-template-columns: 1fr !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 네비게이션 -->
+    <nav>
+        <div class="nav-container">
+            <div class="logo">정원지역아동센터</div>
+            <button class="menu-toggle" aria-label="메뉴">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul>
+                <li><a href="#about">소개</a></li>
+                <li><a href="#purpose">목적</a></li>
+                <li><a href="#history">연혁</a></li>
+                <li><a href="#programs">프로그램</a></li>
+                <li><a href="#notice">공지사항</a></li>
+                <li><a href="#contact">연락처</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- 모바일 메뉴 오버레이 -->
+    <div class="menu-overlay"></div>
+    
+    <!-- 히어로 -->
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-subtitle">Since 2012</div>
+            <h1>아이들의 꿈이<br>자라는 곳</h1>
+            <p>지역 아동들의 건강한 성장을 위해 교육, 돌봄, 문화체험 프로그램을 제공하며 미래의 건강한 사회구성원으로 성장할 수 있도록 지원합니다</p>
+        </div>
+    </section>
+    
+    <!-- 통계 -->
+    <div class="stats">
+        <div class="stat-item">
+            <div class="stat-number">13년</div>
+            <div class="stat-label">지역 아동 복지 발전에 기여</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">40명</div>
+            <div class="stat-label">센터 정원으로 성장</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">14+</div>
+            <div class="stat-label">협력 기관 네트워크</div>
+        </div>
+    </div>
+    
+    <!-- 소개 -->
+    <section id="about">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">About Us</span>
+                <h2 class="section-title">정원지역아동센터를 소개합니다</h2>
+                <p class="section-description">보호가 필요한 지역 아동들에게 종합적인 아동복지서비스를 제공하여 아동의 건전육성을 도모합니다</p>
+            </div>
+            
+            <div class="grid-4">
+                <div class="card animate-on-scroll fade-in-up delay-1">
+                    <h3 class="card-title">사랑과 관심</h3>
+                    <p class="card-text">모든 아이들이 사랑받고 보호받을 수 있는 안전한 공간을 제공합니다</p>
+                </div>
+                
+                <div class="card animate-on-scroll fade-in-up delay-2">
+                    <h3 class="card-title">교육 프로그램</h3>
+                    <p class="card-text">학습지도부터 특별활동까지 아이들의 전인적 성장을 돕습니다</p>
+                </div>
+                
+                <div class="card animate-on-scroll fade-in-up delay-3">
+                    <h3 class="card-title">지역사회 연계</h3>
+                    <p class="card-text">지역사회와 함께하는 다양한 프로그램으로 사회성을 기릅니다</p>
+                </div>
+                
+                <div class="card animate-on-scroll fade-in-up delay-4">
+                    <h3 class="card-title">꿈과 희망</h3>
+                    <p class="card-text">아이들이 자신의 꿈을 찾고 키워나갈 수 있도록 지원합니다</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 목적 -->
+    <section id="purpose" class="bg-light">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">Our Mission</span>
+                <h2 class="section-title">센터의 목적</h2>
+            </div>
+            
+            <div class="purpose-content">
+                <p class="purpose-text animate-on-scroll fade-in-up delay-1">학교 방과 후 지도 및 보호를 받기 어려운 방임상태에 놓인 아동들에게 다양한 교육, 정서지원, 문화체험, 지역사회의 연계프로그램 등을 통하여 가족기능을 보완하고 유해환경으로부터 아동을 안전하게 보호하는 기능을 담당합니다.</p>
+                
+                <p class="purpose-text animate-on-scroll fade-in-up delay-2">또한 성장발달에 따른 각 개인의 아동들에게 다양한 맞춤형 서비스를 제공함으로써 아동들의 소질을 발견하고 개발하여 자아정체성 실현과 자신감을 키워 건전하게 성장할 수 있도록 지지합니다.</p>
+                
+                <p class="purpose-text animate-on-scroll fade-in-up delay-3">아동들이 미래를 개척하고 건전한 삶을 도전하는 긍정적인 사고정신을 조성할 수 있게 하며, 아동들에게 받았던 도움을 다시 사회에 돌려줄 수 있는 아동으로 자랄 수 있도록 도모하고 건강한 사회공동체구성원으로 성장하게 합니다.</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 연혁 -->
+    <section id="history">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">History</span>
+                <h2 class="section-title">센터 연혁</h2>
+                <p class="section-description">2012년 개소 이후 지역 아동복지 발전을 위해 꾸준히 노력해왔습니다</p>
+            </div>
+            
+            <div class="timeline">
+                <div class="timeline-item animate-on-scroll slide-in-left">
+                    <div class="timeline-year">2012</div>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>4월 2일 정원지역아동센터 개소</li>
+                            <li>심화 평가 우수 기관 선정</li>
+                            <li>하늘정원작은도서관 개관</li>
+                            <li>다문화 특목형 사업 수행</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll slide-in-right">
+                    <div class="timeline-year">2013-14</div>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>공동모금회 복권기금 야간 보호 사업</li>
+                            <li>중고등부 야간 사업 수행</li>
+                            <li>40인 시설로 확장</li>
+                            <li>중학생 특수화 지역아동센터 운영</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll slide-in-left">
+                    <div class="timeline-year">2015</div>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>내부 인테리어 공사 완료</li>
+                            <li>미래에셋 후원 중국 심천 방문</li>
+                            <li>심화평가 우수기관 재선정</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll slide-in-right">
+                    <div class="timeline-year">2016-19</div>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>CJ꿈키움, 사랑의 바이올린 후원</li>
+                            <li>자원봉사 우수기관 선정</li>
+                            <li>경기남부지원단 미술교실 연계</li>
+                            <li>생명보험사회공헌 교육지원사업</li>
+                            <li>다양한 특기적성 프로그램 확대</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll slide-in-left">
+                    <div class="timeline-year">2020-22</div>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>경기사회복지공동모금회 지원사업</li>
+                            <li>환경개선비 지원사업 선정</li>
+                            <li>한세대학교 협약 체결</li>
+                            <li>복권기금 통학차량 안전강화사업</li>
+                            <li>우리아이심리지원서비스 승인</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="timeline-item animate-on-scroll slide-in-right">
+                    <div class="timeline-year">2023-25</div>
+                    <div class="timeline-content">
+                        <ul>
+                            <li>디지털새싹 SW·AI교육 캠프</li>
+                            <li>세이브더칠드런 안전한 기관 만들기</li>
+                            <li>우앙재단 여름방학 요리교실</li>
+                            <li>지역사회 네트워크 지속 강화</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 프로그램 -->
+    <section id="programs" class="bg-light">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">Programs</span>
+                <h2 class="section-title">주요 프로그램</h2>
+                <p class="section-description">아이들의 전인적 성장을 위한 체계적이고 다양한 프로그램을 운영하고 있습니다</p>
+            </div>
+            
+            <div class="grid-2">
+                <div class="card animate-on-scroll fade-in-up delay-1">
+                    <h3 class="card-title">생활지도</h3>
+                    <ul class="card-list">
+                        <li>급식지도</li>
+                        <li>위생 점검</li>
+                        <li>학교생활지도</li>
+                        <li>아동자치회의</li>
+                        <li>신체검사</li>
+                        <li>귀가지도</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-on-scroll fade-in-up delay-2">
+                    <h3 class="card-title">체험학습</h3>
+                    <ul class="card-list">
+                        <li>문화체험 (영화, 공연관람)</li>
+                        <li>방학 중 캠프</li>
+                        <li>생태체험</li>
+                        <li>눈썰매장</li>
+                        <li>다양한 야외활동</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-on-scroll fade-in-up delay-3">
+                    <h3 class="card-title">정서지도</h3>
+                    <ul class="card-list">
+                        <li>진로탐색</li>
+                        <li>집단상담</li>
+                        <li>청소년동반자상담</li>
+                        <li>학부모간담회</li>
+                        <li>개인상담</li>
+                        <li>미술치료상담</li>
+                    </ul>
+                </div>
+                
+                <div class="card animate-on-scroll fade-in-up delay-4">
+                    <h3 class="card-title">특기적성</h3>
+                    <ul class="card-list">
+                        <li>티볼수업</li>
+                        <li>요리수업</li>
+                        <li>미술수업</li>
+                        <li>컴퓨터수업</li>
+                        <li>전래놀이</li>
+                        <li>보드게임수업</li>
+                        <li>바둑교실</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 공지사항 -->
+    <section id="notice">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">Notice</span>
+                <h2 class="section-title">공지사항</h2>
+                <p class="section-description">센터의 최신 소식과 공지사항을 확인하세요</p>
+            </div>
+            
+            <div id="notice-list" class="notice-grid">
+                <div class="notice-loading" style="text-align: center; padding: 4rem; color: #999;">
+                    <p>공지사항을 불러오는 중...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 운영 안내 -->
+    <section>
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">Operation</span>
+                <h2 class="section-title">운영 안내</h2>
+                <p class="section-description">정원지역아동센터의 운영 시간과 프로그램 안내입니다</p>
+            </div>
+            
+            <div class="grid-3">
+                <div class="card animate-on-scroll scale-in delay-1">
+                    <h3 class="card-title">운영 기간</h3>
+                    <p class="card-text">연중 운영 (1월 ~ 12월)</p>
+                </div>
+                
+                <div class="card animate-on-scroll scale-in delay-2">
+                    <h3 class="card-title">운영 시간</h3>
+                    <p class="card-text">학기 중: 평일 10:00 - 20:30<br>방학 중: 평일 10:00 - 20:30</p>
+                </div>
+                
+                <div class="card animate-on-scroll scale-in delay-3">
+                    <h3 class="card-title">보호 영역</h3>
+                    <p class="card-text">센터생활적응지도, 일상예절교육, 위생점검, 급식, 안전귀가지도, 아동자치회의, 인권교육</p>
+                </div>
+                
+                <div class="card animate-on-scroll scale-in delay-1">
+                    <h3 class="card-title">교육 영역</h3>
+                    <p class="card-text">교과학습지도, 특기적성 예체능활동, 보드게임, 바둑</p>
+                </div>
+                
+                <div class="card animate-on-scroll scale-in delay-2">
+                    <h3 class="card-title">문화 영역</h3>
+                    <p class="card-text">문화체험(공연, 박물관견학), 방학캠프(1박2일), 일일체험</p>
+                </div>
+                
+                <div class="card animate-on-scroll scale-in delay-3">
+                    <h3 class="card-title">정서지원 영역</h3>
+                    <p class="card-text">아동상담, 부모상담, 가족지원모임, 집단상담, 미술치료상담, 연극치료</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 협력 네트워크 -->
+    <section class="bg-light">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">Network</span>
+                <h2 class="section-title">협력 네트워크</h2>
+                <p class="section-description">다양한 기관 및 단체와 협력하여 아동들에게 더 나은 서비스를 제공하고 있습니다</p>
+            </div>
+            
+            <div class="tags animate-on-scroll fade-in-up">
+                <span class="tag">운영위원회</span>
+                <span class="tag">드림스타트</span>
+                <span class="tag">돋움</span>
+                <span class="tag">군포시지역아동센터 연합회</span>
+                <span class="tag">군포시 시니어클럽</span>
+                <span class="tag">한세대학교 멘토 지원</span>
+                <span class="tag">지맨스 병원</span>
+                <span class="tag">군포시 생활체육회</span>
+                <span class="tag">군포시 어린이급식관리지원센터</span>
+                <span class="tag">경기남부지원단</span>
+                <span class="tag">군포시자원봉사센터</span>
+                <span class="tag">경기사회복지공동모금회</span>
+                <span class="tag">우앙재단</span>
+                <span class="tag">세이브더칠드런</span>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 연락처 CTA -->
+    <section id="contact" class="cta-section">
+        <div class="section-container">
+            <span class="section-tag" style="color: rgba(255,255,255,0.9);">Contact</span>
+            <h2 class="section-title">오시는 길</h2>
+            <p class="section-description">정원지역아동센터로 언제든지 문의하시거나 방문해 주세요</p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h3>주소</h3>
+                    <p>경기도 군포시 군포로 476번길 2<br>3층 하늘사회적협동조합</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>연락처</h3>
+                    <p>대표 전화: 031-394-9184<br>팩스: 031-427-9184<br>이메일: ssang70@hanmail.net</p>
+                    <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.8;">CMS 및 기부금영수증 문의<br>031-394-9184</p>
+                </div>
+                
+                <div class="contact-item">
+                    <h3>운영시간</h3>
+                    <p>평일: 10:00 - 20:30<br>주말 및 공휴일: 별도 안내</p>
+                </div>
+            </div>
+            
+            <div style="margin-top: 4rem; padding: 2.5rem; background: rgba(255,255,255,0.1); border-radius: 12px; backdrop-filter: blur(10px);">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1.5rem; font-weight: 600;">후원 안내</h3>
+                <p style="font-size: 1.15rem; opacity: 0.9; margin-bottom: 0.5rem;">농협은행 <strong>301-0312-2193-01</strong></p>
+                <p style="font-size: 1rem; opacity: 0.8;">예금주: 하늘사회적협동조합</p>
+                <p style="font-size: 0.95rem; opacity: 0.75; margin-top: 1rem;">여러분의 후원은 아이들의 밝은 미래를 만듭니다</p>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 지도 -->
+    <section style="padding: 6rem 3rem; background: #fafafa;">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up" style="text-align: center;">
+                <span class="section-tag">Location</span>
+                <h2 class="section-title">찾아오시는 길</h2>
+                <p class="section-description">경기도 군포시 군포로 476번길 2, 3층</p>
+            </div>
+            
+            <div class="map-container animate-on-scroll fade-in-up">
+                <iframe src="https://maps.google.com/maps?q=경기도+군포시+군포로476번길+2&output=embed" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+            
+            <div style="margin-top: 3rem; text-align: center;" class="animate-on-scroll fade-in-up">
+                <h3 style="font-size: 1.3rem; color: #1a1a1a; margin-bottom: 1.5rem; font-weight: 600;">대중교통 이용안내</h3>
+                <div style="max-width: 800px; margin: 0 auto; display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem;">
+                    <div style="text-align: left;">
+                        <h4 style="color: #ea7c69; font-size: 1.1rem; margin-bottom: 1rem;">지하철</h4>
+                        <p style="color: #666; line-height: 1.8;">1호선 군포역 하차 후<br>도보 또는 버스 이용</p>
+                    </div>
+                    <div style="text-align: left;">
+                        <h4 style="color: #ea7c69; font-size: 1.1rem; margin-bottom: 1rem;">버스</h4>
+                        <p style="color: #666; line-height: 1.8;">군포시 관내 버스 이용<br>자세한 노선은 전화 문의</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- 푸터 -->
+    <footer>
+        <p><strong>정원지역아동센터</strong></p>
+        <p>운영: 하늘사회적협동조합</p>
+        <p>경기도 군포시 군포로 476번길 2 3층 | 전화: 031-394-9184</p>
+        <p>이메일: ssang70@hanmail.net</p>
+        <p style="margin-top: 1.5rem;">아이들의 행복한 미래를 함께 만들어갑니다</p>
+        <div style="margin-top: 1rem;">
+            <a href="#" style="color: #999; text-decoration: none; margin: 0 1rem; font-size: 0.9rem;">이용약관</a>
+            <a href="#" style="color: #999; text-decoration: none; margin: 0 1rem; font-size: 0.9rem;">개인정보처리방침</a>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.85rem;">© 2012-2025 정원지역아동센터. All rights reserved.</p>
+    </footer>
+    
+    <script>
+        // ==========================================
+        // 🔧 구글 시트 설정 (관리자가 수정하는 부분)
+        // ==========================================
+        
+        // 여기에 구글 시트 ID를 입력하세요
+        // 예시: https://docs.google.com/spreadsheets/d/1abc123def456/edit
+        // → SHEET_ID는 '1abc123def456' 부분입니다
+        const SHEET_ID = '여기에_구글시트_ID를_입력하세요';
+        
+        // ==========================================
+        
+        
+        // 구글 시트에서 공지사항 불러오기
+        async function loadNotices() {
+            const noticeList = document.getElementById('notice-list');
+            
+            // 구글 시트 ID가 설정되지 않은 경우
+            if (SHEET_ID === '여기에_구글시트_ID를_입력하세요') {
+                noticeList.innerHTML = `
+                    <div class="notice-empty">
+                        <h3>🔧 설정이 필요합니다</h3>
+                        <p>관리자: 구글 시트 ID를 설정해주세요</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                            설정 방법은 함께 제공된 가이드를 참고하세요
+                        </p>
+                    </div>
+                `;
+                return;
+            }
+            
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=공지사항`;
+                const response = await fetch(url);
+                const csvText = await response.text();
+                
+                // CSV 파싱
+                const rows = parseCSV(csvText);
+                
+                // 첫 행(헤더)을 제외하고 데이터 가져오기
+                const notices = rows.slice(1).filter(row => row[0]); // 빈 행 제외
+                
+                if (notices.length === 0) {
+                    noticeList.innerHTML = `
+                        <div class="notice-empty">
+                            <h3>📢 등록된 공지사항이 없습니다</h3>
+                            <p>새로운 소식이 올라오면 알려드리겠습니다</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // 공지사항 카드 생성 (최신순으로 표시)
+                noticeList.innerHTML = notices.reverse().map(notice => {
+                    const [date, title, content, isImportant] = notice;
+                    const badge = isImportant?.toLowerCase() === 'true' || isImportant === '중요' ? 
+                        '<span class="notice-badge">중요</span>' : '';
+                    
+                    return `
+                        <div class="notice-card animate-on-scroll fade-in-up">
+                            ${badge}
+                            <div class="notice-date">${formatDate(date)}</div>
+                            <h3 class="notice-title">${escapeHtml(title)}</h3>
+                            <div class="notice-content">${escapeHtml(content)}</div>
+                        </div>
+                    `;
+                }).join('');
+                
+                // 새로 추가된 요소들에 애니메이션 적용
+                const newElements = document.querySelectorAll('.notice-card.animate-on-scroll');
+                newElements.forEach(el => observer.observe(el));
+                
+            } catch (error) {
+                console.error('공지사항 불러오기 실패:', error);
+                noticeList.innerHTML = `
+                    <div class="notice-empty">
+                        <h3>⚠️ 공지사항을 불러올 수 없습니다</h3>
+                        <p>구글 시트 설정을 확인해주세요</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                            1. 시트가 "웹에 게시" 되어있는지 확인<br>
+                            2. 시트 이름이 "공지사항"인지 확인<br>
+                            3. 열 순서: 날짜, 제목, 내용, 중요여부
+                        </p>
+                    </div>
+                `;
+            }
+        }
+        
+        // CSV 파싱 함수
+        function parseCSV(csv) {
+            const rows = [];
+            let currentRow = [];
+            let currentField = '';
+            let inQuotes = false;
+            
+            for (let i = 0; i < csv.length; i++) {
+                const char = csv[i];
+                const nextChar = csv[i + 1];
+                
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        currentField += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    currentRow.push(currentField);
+                    currentField = '';
+                } else if ((char === '\n' || char === '\r') && !inQuotes) {
+                    if (currentField || currentRow.length > 0) {
+                        currentRow.push(currentField);
+                        rows.push(currentRow);
+                        currentRow = [];
+                        currentField = '';
+                    }
+                    if (char === '\r' && nextChar === '\n') {
+                        i++;
+                    }
+                } else {
+                    currentField += char;
+                }
+            }
+            
+            if (currentField || currentRow.length > 0) {
+                currentRow.push(currentField);
+                rows.push(currentRow);
+            }
+            
+            return rows;
+        }
+        
+        // 날짜 포맷 함수
+        function formatDate(dateStr) {
+            try {
+                const date = new Date(dateStr);
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                return `${year}.${month}.${day}`;
+            } catch {
+                return dateStr;
+            }
+        }
+        
+        // HTML 이스케이프 함수 (보안)
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // 스크롤 애니메이션
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animated');
+                }
+            });
+        }, observerOptions);
+        
+        // 애니메이션 요소 관찰
+        document.addEventListener('DOMContentLoaded', () => {
+            const animateElements = document.querySelectorAll('.animate-on-scroll');
+            animateElements.forEach(el => observer.observe(el));
+            
+            // 공지사항 불러오기
+            loadNotices();
+            
+            // 햄버거 메뉴
+            const menuToggle = document.querySelector('.menu-toggle');
+            const navMenu = document.querySelector('nav ul');
+            const menuOverlay = document.querySelector('.menu-overlay');
+            const menuLinks = document.querySelectorAll('nav a');
+            
+            // 메뉴 토글
+            menuToggle.addEventListener('click', () => {
+                menuToggle.classList.toggle('active');
+                navMenu.classList.toggle('active');
+                menuOverlay.classList.toggle('active');
+                document.body.style.overflow = navMenu.classList.contains('active') ? 'hidden' : '';
+            });
+            
+            // 오버레이 클릭 시 메뉴 닫기
+            menuOverlay.addEventListener('click', () => {
+                menuToggle.classList.remove('active');
+                navMenu.classList.remove('active');
+                menuOverlay.classList.remove('active');
+                document.body.style.overflow = '';
+            });
+            
+            // 메뉴 링크 클릭 시 메뉴 닫기
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navMenu.classList.remove('active');
+                    menuOverlay.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            });
+            
+            // 숫자 카운트업 애니메이션
+            const stats = document.querySelectorAll('.stat-number');
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !entry.target.classList.contains('counted')) {
+                        entry.target.classList.add('counted');
+                        animateNumber(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            stats.forEach(stat => statsObserver.observe(stat));
+        });
+        
+        // 숫자 카운트업 함수
+        function animateNumber(element) {
+            const text = element.textContent;
+            const hasPlus = text.includes('+');
+            const number = parseInt(text.replace(/[^0-9]/g, ''));
+            const duration = 2000;
+            const steps = 60;
+            const stepValue = number / steps;
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += stepValue;
+                if (current >= number) {
+                    element.textContent = number + (text.includes('년') ? '년' : hasPlus ? '+' : text.includes('명') ? '명' : '');
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(current) + (text.includes('년') ? '년' : hasPlus ? '+' : text.includes('명') ? '명' : '');
+                }
+            }, duration / steps);
+        }
+        
+        // 네비게이션 스크롤 효과
+        let lastScroll = 0;
+        const nav = document.querySelector('nav');
+        const hero = document.querySelector('.hero');
+
+        window.addEventListener('scroll', () => {
+            const currentScroll = window.pageYOffset;
+
+            // 네비게이션 그림자 효과
+            if (currentScroll > 100) {
+                nav.style.boxShadow = '0 2px 20px rgba(0, 0, 0, 0.08)';
+            } else {
+                nav.style.boxShadow = 'none';
+            }
+
+            // 히어로 섹션 페이드아웃 효과
+            const heroHeight = hero.offsetHeight;
+            const fadeStart = 0;
+            const fadeEnd = heroHeight * 0.8; // 히어로 섹션의 80% 지점에서 완전히 사라짐
+
+            if (currentScroll <= fadeStart) {
+                hero.style.opacity = '1';
+            } else if (currentScroll >= fadeEnd) {
+                hero.style.opacity = '0';
+            } else {
+                const fadeProgress = (currentScroll - fadeStart) / (fadeEnd - fadeStart);
+                hero.style.opacity = (1 - fadeProgress).toString();
+            }
+
+            lastScroll = currentScroll;
+        });
+        
+        // 부드러운 스크롤
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    const offset = 80;
+                    const targetPosition = target.offsetTop - offset;
+                    window.scrollTo({
+                        top: targetPosition,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>

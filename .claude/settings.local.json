@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:challenges.supercent.io)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
