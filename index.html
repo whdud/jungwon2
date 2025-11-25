@@ -739,18 +739,41 @@
         }
 
         @media (max-width: 768px) {
+            .calendar-controls {
+                gap: 1rem;
+            }
+
+            .calendar-current-month {
+                font-size: 1.3rem;
+                min-width: 150px;
+            }
+
+            .calendar-wrapper {
+                padding: 1rem;
+            }
+
+            .calendar-weekday {
+                font-size: 0.75rem;
+                padding: 0.5rem 0;
+            }
+
+            .calendar-days {
+                gap: 0.25rem;
+            }
+
             .calendar-day {
-                min-height: 60px;
-                padding: 0.5rem;
+                min-height: 50px;
+                padding: 0.3rem;
+                aspect-ratio: auto;
             }
 
             .calendar-day-number {
-                font-size: 0.85rem;
+                font-size: 0.75rem;
             }
 
             .calendar-event-dot {
-                font-size: 0.6rem;
-                padding: 0.1rem 0.3rem;
+                font-size: 0.55rem;
+                padding: 0.1rem 0.2rem;
             }
         }
 
