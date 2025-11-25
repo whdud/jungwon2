@@ -518,6 +518,81 @@
             }
         }
 
+        /* 캘린더 */
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .calendar-card {
+            background: #fff;
+            border: 1px solid #e8e8e8;
+            border-left: 4px solid #ea7c69;
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .calendar-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        .calendar-date {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .calendar-day {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ea7c69;
+            line-height: 1;
+        }
+
+        .calendar-month {
+            font-size: 0.9rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .calendar-time {
+            font-size: 0.95rem;
+            color: #ea7c69;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .calendar-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 0.8rem;
+            line-height: 1.4;
+        }
+
+        .calendar-content {
+            font-size: 0.95rem;
+            color: #666;
+            line-height: 1.7;
+        }
+
+        .calendar-empty {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #999;
+        }
+
+        .calendar-empty h3 {
+            font-size: 1.3rem;
+            color: #666;
+            margin-bottom: 0.5rem;
+        }
+
         /* 네트워크 태그 */
         .tags {
             display: flex;
@@ -880,6 +955,7 @@
                 <li><a href="#history">연혁</a></li>
                 <li><a href="#programs">프로그램</a></li>
                 <li><a href="#notice">공지사항</a></li>
+                <li><a href="#calendar">일정</a></li>
                 <li><a href="#contact">연락처</a></li>
             </ul>
         </div>
@@ -1143,6 +1219,23 @@
         </div>
     </div>
 
+    <!-- 일정 -->
+    <section id="calendar" class="bg-light">
+        <div class="section-container">
+            <div class="section-header animate-on-scroll fade-in-up">
+                <span class="section-tag">Calendar</span>
+                <h2 class="section-title">센터 일정</h2>
+                <p class="section-description">센터의 주요 행사와 일정을 확인하세요</p>
+            </div>
+
+            <div id="calendar-list" class="calendar-grid">
+                <div class="calendar-loading" style="text-align: center; padding: 4rem; color: #999;">
+                    <p>일정을 불러오는 중...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- 운영 안내 -->
     <section>
         <div class="section-container">
@@ -1390,7 +1483,88 @@
                 `;
             }
         }
-        
+
+        // 구글 시트에서 일정 불러오기
+        async function loadCalendar() {
+            const calendarList = document.getElementById('calendar-list');
+
+            if (SHEET_ID === '여기에_구글시트_ID를_입력하세요') {
+                calendarList.innerHTML = `
+                    <div class="calendar-empty">
+                        <h3>🔧 설정이 필요합니다</h3>
+                        <p>관리자: 구글 시트 ID를 설정해주세요</p>
+                    </div>
+                `;
+                return;
+            }
+
+            try {
+                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=일정`;
+                const response = await fetch(url);
+                const csvText = await response.text();
+
+                // CSV 파싱
+                const rows = parseCSV(csvText);
+
+                // 첫 행(헤더)을 제외하고 데이터 가져오기
+                const events = rows.slice(1).filter(row => row[0]); // 빈 행 제외
+
+                if (events.length === 0) {
+                    calendarList.innerHTML = `
+                        <div class="calendar-empty">
+                            <h3>📅 등록된 일정이 없습니다</h3>
+                            <p>새로운 일정이 등록되면 알려드리겠습니다</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                // 날짜순 정렬 (가까운 날짜부터)
+                const sortedEvents = events.sort((a, b) => new Date(a[0]) - new Date(b[0]));
+
+                // 일정 카드 생성
+                calendarList.innerHTML = sortedEvents.map(event => {
+                    const [date, title, content, time] = event;
+                    const dateObj = new Date(date);
+                    const day = dateObj.getDate();
+                    const month = dateObj.toLocaleDateString('ko-KR', { month: 'short' });
+                    const year = dateObj.getFullYear();
+
+                    return `
+                        <div class="calendar-card animate-on-scroll fade-in-up">
+                            <div class="calendar-date">
+                                <div class="calendar-day">${day}</div>
+                                <div>
+                                    <div class="calendar-month">${month} ${year}</div>
+                                </div>
+                            </div>
+                            ${time ? `<div class="calendar-time">⏰ ${escapeHtml(time)}</div>` : ''}
+                            <h3 class="calendar-title">${escapeHtml(title)}</h3>
+                            <div class="calendar-content">${escapeHtml(content)}</div>
+                        </div>
+                    `;
+                }).join('');
+
+                // 새로 추가된 요소들에 애니메이션 적용
+                const newElements = document.querySelectorAll('.calendar-card.animate-on-scroll');
+                newElements.forEach(el => observer.observe(el));
+
+            } catch (error) {
+                console.error('일정 불러오기 실패:', error);
+                calendarList.innerHTML = `
+                    <div class="calendar-empty">
+                        <h3>⚠️ 일정을 불러올 수 없습니다</h3>
+                        <p>구글 시트 설정을 확인해주세요</p>
+                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
+                            1. 시트가 "웹에 게시" 되어있는지 확인<br>
+                            2. 시트 이름이 "일정"인지 확인<br>
+                            3. 열 순서: 날짜, 제목, 내용, 시간
+                        </p>
+                    </div>
+                `;
+            }
+        }
+
         // CSV 파싱 함수
         function parseCSV(csv) {
             const rows = [];
@@ -1523,7 +1697,10 @@
             
             // 공지사항 불러오기
             loadNotices();
-            
+
+            // 일정 불러오기
+            loadCalendar();
+
             // 햄버거 메뉴
             const menuToggle = document.querySelector('.menu-toggle');
             const navMenu = document.querySelector('nav ul');
