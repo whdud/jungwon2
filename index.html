@@ -2060,6 +2060,25 @@
             }
         });
 
+        // 구글 드라이브 링크 자동 변환
+        function convertDriveUrl(url) {
+            if (!url) return '';
+
+            // 이미 변환된 링크면 그대로 반환
+            if (url.includes('drive.google.com/uc?')) {
+                return url;
+            }
+
+            // /file/d/FILE_ID/view 형식에서 FILE_ID 추출
+            const match = url.match(/\/file\/d\/([^\/]+)/);
+            if (match && match[1]) {
+                return `https://drive.google.com/uc?export=view&id=${match[1]}`;
+            }
+
+            // 이미 일반 URL이면 그대로 반환 (외부 이미지 등)
+            return url;
+        }
+
         // 구글 시트에서 앨범 불러오기
         async function loadGallery() {
             const galleryList = document.getElementById('gallery-list');
@@ -2101,7 +2120,7 @@
 
                     return `
                         <div class="gallery-item animate-on-scroll fade-in-up" onclick="openGalleryModal(${index})">
-                            <img src="${imageUrl}" alt="${escapeHtml(title)}" class="gallery-image" loading="lazy">
+                            <img src="${convertDriveUrl(imageUrl)}" alt="${escapeHtml(title)}" class="gallery-image" loading="lazy">
                             <div class="gallery-info">
                                 <div class="gallery-date">${formatDate(date)}</div>
                                 <h3 class="gallery-title">${escapeHtml(title)}</h3>
@@ -2141,7 +2160,7 @@
             const [date, title, description, imageUrl] = window.galleryData[index];
             const modal = document.getElementById('gallery-modal');
 
-            document.getElementById('modal-gallery-image').src = imageUrl;
+            document.getElementById('modal-gallery-image').src = convertDriveUrl(imageUrl);
             document.getElementById('modal-gallery-date').textContent = formatDate(date);
             document.getElementById('modal-gallery-title').textContent = title;
             document.getElementById('modal-gallery-description').textContent = description;
