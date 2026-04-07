@@ -979,6 +979,40 @@
             box-shadow: 0 8px 16px rgba(234, 124, 105, 0.25);
         }
         
+        /* 협력 네트워크 로고 */
+        .partner-logos {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .partner-logo-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem 1.5rem;
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .partner-logo-item:hover {
+            box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+            transform: translateY(-4px);
+            border-color: #ea7c69;
+        }
+
+        .partner-logo-item img {
+            height: 60px;
+            width: auto;
+            object-fit: contain;
+        }
+
         /* CTA 섹션 */
         .cta-section {
             background: linear-gradient(135deg, #ea7c69 0%, #d4614f 100%);
@@ -1668,6 +1702,17 @@
                 <p class="section-description">다양한 기관 및 단체와 협력하여 아동들에게 더 나은&nbsp;서비스를 제공하고 있습니다</p>
             </div>
             
+            <!-- 로고 이미지 -->
+            <div class="partner-logos animate-on-scroll fade-in-up">
+                <a href="https://www.gunpo.go.kr/www/index.do" target="_blank" rel="noopener" class="partner-logo-item">
+                    <img src="https://www.gunpo.go.kr/resources/www/images/common/logo.png" alt="군포시">
+                </a>
+                <!-- 추가 로고는 아래 형식으로 입력 -->
+                <!-- <a href="링크URL" target="_blank" rel="noopener" class="partner-logo-item">
+                    <img src="이미지URL" alt="기관명">
+                </a> -->
+            </div>
+
             <div class="tags animate-on-scroll fade-in-up">
                 <span class="tag">운영위원회</span>
                 <span class="tag">드림스타트</span>
