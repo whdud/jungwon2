@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <title>관리자 - 하늘사회적협동조합</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans KR', sans-serif;
+            background: #f5f5f7;
+            color: #1a1a1a;
+            line-height: 1.5;
+        }
+        .container { max-width: 1100px; margin: 0 auto; padding: 2rem 1rem; }
+        h1 { font-size: 1.5rem; margin-bottom: 1.5rem; }
+
+        /* 로그인 화면 */
+        .login-box {
+            max-width: 360px;
+            margin: 8rem auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+        }
+        .login-box h2 { margin-bottom: 1rem; font-size: 1.2rem; }
+        .login-box input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        .login-box button {
+            width: 100%;
+            padding: 0.75rem;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        .login-box .error { color: #d00; font-size: 0.85rem; margin-top: 0.5rem; }
+
+        /* 상단 바 */
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .logout-btn {
+            padding: 0.5rem 1rem;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        /* 탭 */
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+        .tab {
+            padding: 0.75rem 1.5rem;
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+        }
+        .tab.active {
+            color: #1a1a1a;
+            border-bottom-color: #1a1a1a;
+            font-weight: 600;
+        }
+
+        /* 폼 */
+        .form-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            margin-bottom: 1.5rem;
+        }
+        .form-card h3 { margin-bottom: 1rem; font-size: 1.1rem; }
+        .form-row {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 0.75rem;
+            flex-wrap: wrap;
+        }
+        .form-row > * { flex: 1; min-width: 0; }
+        .form-row input, .form-row textarea, .form-row select {
+            padding: 0.6rem;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            width: 100%;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        .form-actions { display: flex; gap: 0.5rem; margin-top: 0.5rem; }
+        .btn-primary {
+            padding: 0.6rem 1.2rem;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .btn-secondary {
+            padding: 0.6rem 1.2rem;
+            background: #f0f0f0;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+        .btn-danger {
+            padding: 0.4rem 0.8rem;
+            background: #fff;
+            color: #d00;
+            border: 1px solid #fcc;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .btn-edit {
+            padding: 0.4rem 0.8rem;
+            background: #fff;
+            color: #1a1a1a;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+        }
+        .checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.75rem;
+        }
+        .checkbox-row input[type=checkbox] { width: auto; }
+
+        /* 목록 */
+        .list-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+        .list-card h3 { padding: 1rem 1.5rem; border-bottom: 1px solid #eee; font-size: 1.1rem; }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .item:last-child { border-bottom: none; }
+        .item-main { flex: 1; min-width: 0; }
+        .item-date { font-size: 0.8rem; color: #888; }
+        .item-title { font-weight: 600; margin: 0.25rem 0; }
+        .item-content {
+            font-size: 0.9rem;
+            color: #555;
+            white-space: pre-wrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        .item-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            background: #ffe0e0;
+            color: #d00;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-left: 0.5rem;
+        }
+        .empty { padding: 2rem; text-align: center; color: #999; }
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a1a1a;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1000;
+        }
+        .toast.show { opacity: 1; }
+        .toast.error { background: #d00; }
+        .help {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: -0.5rem;
+            margin-bottom: 0.75rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 로그인 화면 -->
+<div id="login-screen" class="login-box">
+    <h2>관리자 로그인</h2>
+    <input type="password" id="login-password" placeholder="비밀번호" autocomplete="current-password">
+    <button onclick="login()">로그인</button>
+    <div id="login-error" class="error"></div>
+</div>
+
+<!-- 관리 화면 -->
+<div id="admin-screen" class="container" style="display:none">
+    <div class="top-bar">
+        <h1>관리자 페이지</h1>
+        <div>
+            <a href="/" style="margin-right:1rem; color:#666; text-decoration:none; font-size:0.9rem;">← 메인으로</a>
+            <button class="logout-btn" onclick="logout()">로그아웃</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab active" data-tab="notices" onclick="switchTab('notices')">공지사항</button>
+        <button class="tab" data-tab="events" onclick="switchTab('events')">일정</button>
+        <button class="tab" data-tab="albums" onclick="switchTab('albums')">앨범</button>
+    </div>
+
+    <!-- 공지사항 탭 -->
+    <div id="tab-notices" class="tab-content">
+        <div class="form-card">
+            <h3 id="notice-form-title">새 공지 추가</h3>
+            <input type="hidden" id="notice-id">
+            <div class="form-row">
+                <input type="date" id="notice-date">
+                <input type="text" id="notice-title-input" placeholder="제목" style="flex:2">
+            </div>
+            <textarea id="notice-content" placeholder="내용 (줄바꿈 가능)"></textarea>
+            <div class="checkbox-row">
+                <input type="checkbox" id="notice-important">
+                <label for="notice-important">중요 공지로 표시</label>
+            </div>
+            <div class="form-actions">
+                <button class="btn-primary" onclick="saveNotice()">저장</button>
+                <button class="btn-secondary" onclick="resetNoticeForm()">취소</button>
+            </div>
+        </div>
+        <div class="list-card">
+            <h3>공지사항 목록</h3>
+            <div id="notices-list"><div class="empty">불러오는 중...</div></div>
+        </div>
+    </div>
+
+    <!-- 일정 탭 -->
+    <div id="tab-events" class="tab-content" style="display:none">
+        <div class="form-card">
+            <h3 id="event-form-title">새 일정 추가</h3>
+            <input type="hidden" id="event-id">
+            <div class="form-row">
+                <input type="date" id="event-date">
+                <input type="text" id="event-time-input" placeholder="시간 (예: 19:00, 선택)">
+            </div>
+            <input type="text" id="event-title-input" placeholder="제목" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:6px; margin-bottom:0.75rem;">
+            <textarea id="event-content" placeholder="내용 (선택)"></textarea>
+            <div class="form-actions">
+                <button class="btn-primary" onclick="saveEvent()">저장</button>
+                <button class="btn-secondary" onclick="resetEventForm()">취소</button>
+            </div>
+        </div>
+        <div class="list-card">
+            <h3>일정 목록</h3>
+            <div id="events-list"><div class="empty">불러오는 중...</div></div>
+        </div>
+    </div>
+
+    <!-- 앨범 탭 -->
+    <div id="tab-albums" class="tab-content" style="display:none">
+        <div class="form-card">
+            <h3 id="album-form-title">새 앨범 추가</h3>
+            <input type="hidden" id="album-id">
+            <div class="form-row">
+                <input type="date" id="album-date">
+                <input type="text" id="album-title-input" placeholder="제목" style="flex:2">
+            </div>
+            <input type="text" id="album-image-url" placeholder="구글 드라이브 공유 링크 (https://drive.google.com/file/d/.../view?usp=sharing)" style="width:100%; padding:0.6rem; border:1px solid #ddd; border-radius:6px; margin-bottom:0.25rem;">
+            <div class="help">구글 드라이브에서 사진 우클릭 → 공유 → "링크가 있는 모든 사용자" 설정 후 링크 복사</div>
+            <textarea id="album-description" placeholder="설명 (선택)"></textarea>
+            <div class="form-actions">
+                <button class="btn-primary" onclick="saveAlbum()">저장</button>
+                <button class="btn-secondary" onclick="resetAlbumForm()">취소</button>
+            </div>
+        </div>
+        <div class="list-card">
+            <h3>앨범 목록</h3>
+            <div id="albums-list"><div class="empty">불러오는 중...</div></div>
+        </div>
+    </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+    const STORAGE_KEY = 'jungwon_admin_token';
+    let token = sessionStorage.getItem(STORAGE_KEY);
+
+    // 페이지 로드 시
+    if (token) {
+        showAdmin();
+    }
+
+    document.getElementById('login-password').addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') login();
+    });
+
+    async function login() {
+        const pwd = document.getElementById('login-password').value;
+        if (!pwd) return;
+        // 비밀번호 검증: GET은 인증 없이 되니까, 실제로 한 번 인증이 필요한 호출(예: POST + 빈 데이터)로 401 여부 확인
+        // 단순하게: 비번을 일단 저장하고, 잘못되면 첫 작업에서 401 → 로그아웃
+        // 더 안전한 방법: 사실상 비번 저장만 하고, 첫 시도에서 검증
+        token = pwd;
+        sessionStorage.setItem(STORAGE_KEY, token);
+        document.getElementById('login-error').textContent = '';
+        showAdmin();
+    }
+
+    function logout() {
+        token = null;
+        sessionStorage.removeItem(STORAGE_KEY);
+        document.getElementById('admin-screen').style.display = 'none';
+        document.getElementById('login-screen').style.display = 'block';
+        document.getElementById('login-password').value = '';
+    }
+
+    function showAdmin() {
+        document.getElementById('login-screen').style.display = 'none';
+        document.getElementById('admin-screen').style.display = 'block';
+        loadNotices();
+        loadEvents();
+        loadAlbums();
+    }
+
+    function switchTab(name) {
+        document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+        document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+        document.getElementById('tab-' + name).style.display = 'block';
+    }
+
+    function showToast(msg, isError = false) {
+        const toast = document.getElementById('toast');
+        toast.textContent = msg;
+        toast.classList.toggle('error', isError);
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 2500);
+    }
+
+    async function apiCall(url, method = 'GET', body = null) {
+        const opts = { method, headers: {} };
+        if (token) opts.headers['Authorization'] = 'Bearer ' + token;
+        if (body) {
+            opts.headers['Content-Type'] = 'application/json';
+            opts.body = JSON.stringify(body);
+        }
+        const res = await fetch(url, opts);
+        if (res.status === 401) {
+            showToast('비밀번호가 틀렸습니다', true);
+            logout();
+            throw new Error('Unauthorized');
+        }
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || '요청 실패');
+        return data;
+    }
+
+    function escapeHtml(text) {
+        if (text == null) return '';
+        return String(text).replace(/[&<>"']/g, c => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+        }[c]));
+    }
+
+    function fmtDate(iso) {
+        if (!iso) return '';
+        const d = new Date(iso);
+        return d.toISOString().slice(0, 10);
+    }
+
+    // ===== 공지사항 =====
+    async function loadNotices() {
+        try {
+            const list = await apiCall('/api/notices');
+            const container = document.getElementById('notices-list');
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty">아직 공지가 없습니다</div>';
+                return;
+            }
+            container.innerHTML = list.map(n => `
+                <div class="item">
+                    <div class="item-main">
+                        <div class="item-date">${fmtDate(n.date)}${n.is_important ? '<span class="badge">중요</span>' : ''}</div>
+                        <div class="item-title">${escapeHtml(n.title)}</div>
+                        <div class="item-content">${escapeHtml(n.content)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-edit" onclick='editNotice(${JSON.stringify(n).replace(/'/g, "&#39;")})'>수정</button>
+                        <button class="btn-danger" onclick="deleteNotice(${n.id})">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (e) { console.error(e); }
+    }
+
+    function editNotice(n) {
+        document.getElementById('notice-id').value = n.id;
+        document.getElementById('notice-date').value = fmtDate(n.date);
+        document.getElementById('notice-title-input').value = n.title;
+        document.getElementById('notice-content').value = n.content;
+        document.getElementById('notice-important').checked = !!n.is_important;
+        document.getElementById('notice-form-title').textContent = '공지 수정 중 (id: ' + n.id + ')';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetNoticeForm() {
+        document.getElementById('notice-id').value = '';
+        document.getElementById('notice-date').value = '';
+        document.getElementById('notice-title-input').value = '';
+        document.getElementById('notice-content').value = '';
+        document.getElementById('notice-important').checked = false;
+        document.getElementById('notice-form-title').textContent = '새 공지 추가';
+    }
+
+    async function saveNotice() {
+        const id = document.getElementById('notice-id').value;
+        const body = {
+            date: document.getElementById('notice-date').value,
+            title: document.getElementById('notice-title-input').value.trim(),
+            content: document.getElementById('notice-content').value.trim(),
+            is_important: document.getElementById('notice-important').checked,
+        };
+        if (!body.date || !body.title || !body.content) {
+            return showToast('날짜, 제목, 내용을 모두 입력하세요', true);
+        }
+        try {
+            if (id) {
+                await apiCall('/api/notices?id=' + id, 'PUT', body);
+                showToast('공지를 수정했습니다');
+            } else {
+                await apiCall('/api/notices', 'POST', body);
+                showToast('공지를 추가했습니다');
+            }
+            resetNoticeForm();
+            loadNotices();
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    }
+
+    async function deleteNotice(id) {
+        if (!confirm('이 공지를 삭제하시겠습니까?')) return;
+        try {
+            await apiCall('/api/notices?id=' + id, 'DELETE');
+            showToast('공지를 삭제했습니다');
+            loadNotices();
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    }
+
+    // ===== 일정 =====
+    async function loadEvents() {
+        try {
+            const list = await apiCall('/api/events');
+            const container = document.getElementById('events-list');
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty">아직 일정이 없습니다</div>';
+                return;
+            }
+            container.innerHTML = list.map(e => `
+                <div class="item">
+                    <div class="item-main">
+                        <div class="item-date">${fmtDate(e.date)}${e.time ? ' · ' + escapeHtml(e.time) : ''}</div>
+                        <div class="item-title">${escapeHtml(e.title)}</div>
+                        ${e.content ? `<div class="item-content">${escapeHtml(e.content)}</div>` : ''}
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-edit" onclick='editEvent(${JSON.stringify(e).replace(/'/g, "&#39;")})'>수정</button>
+                        <button class="btn-danger" onclick="deleteEvent(${e.id})">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (err) { console.error(err); }
+    }
+
+    function editEvent(e) {
+        document.getElementById('event-id').value = e.id;
+        document.getElementById('event-date').value = fmtDate(e.date);
+        document.getElementById('event-time-input').value = e.time || '';
+        document.getElementById('event-title-input').value = e.title;
+        document.getElementById('event-content').value = e.content || '';
+        document.getElementById('event-form-title').textContent = '일정 수정 중 (id: ' + e.id + ')';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetEventForm() {
+        document.getElementById('event-id').value = '';
+        document.getElementById('event-date').value = '';
+        document.getElementById('event-time-input').value = '';
+        document.getElementById('event-title-input').value = '';
+        document.getElementById('event-content').value = '';
+        document.getElementById('event-form-title').textContent = '새 일정 추가';
+    }
+
+    async function saveEvent() {
+        const id = document.getElementById('event-id').value;
+        const body = {
+            date: document.getElementById('event-date').value,
+            title: document.getElementById('event-title-input').value.trim(),
+            time: document.getElementById('event-time-input').value.trim() || null,
+            content: document.getElementById('event-content').value.trim() || null,
+        };
+        if (!body.date || !body.title) {
+            return showToast('날짜와 제목을 입력하세요', true);
+        }
+        try {
+            if (id) {
+                await apiCall('/api/events?id=' + id, 'PUT', body);
+                showToast('일정을 수정했습니다');
+            } else {
+                await apiCall('/api/events', 'POST', body);
+                showToast('일정을 추가했습니다');
+            }
+            resetEventForm();
+            loadEvents();
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    }
+
+    async function deleteEvent(id) {
+        if (!confirm('이 일정을 삭제하시겠습니까?')) return;
+        try {
+            await apiCall('/api/events?id=' + id, 'DELETE');
+            showToast('일정을 삭제했습니다');
+            loadEvents();
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    }
+
+    // ===== 앨범 =====
+    async function loadAlbums() {
+        try {
+            const list = await apiCall('/api/albums');
+            const container = document.getElementById('albums-list');
+            if (list.length === 0) {
+                container.innerHTML = '<div class="empty">아직 앨범이 없습니다</div>';
+                return;
+            }
+            container.innerHTML = list.map(a => `
+                <div class="item">
+                    <div class="item-main">
+                        <div class="item-date">${fmtDate(a.date)}</div>
+                        <div class="item-title">${escapeHtml(a.title)}</div>
+                        ${a.description ? `<div class="item-content">${escapeHtml(a.description)}</div>` : ''}
+                        <div style="font-size:0.75rem;color:#aaa;margin-top:0.25rem;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:500px;">${escapeHtml(a.image_url)}</div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-edit" onclick='editAlbum(${JSON.stringify(a).replace(/'/g, "&#39;")})'>수정</button>
+                        <button class="btn-danger" onclick="deleteAlbum(${a.id})">삭제</button>
+                    </div>
+                </div>
+            `).join('');
+        } catch (e) { console.error(e); }
+    }
+
+    function editAlbum(a) {
+        document.getElementById('album-id').value = a.id;
+        document.getElementById('album-date').value = fmtDate(a.date);
+        document.getElementById('album-title-input').value = a.title;
+        document.getElementById('album-description').value = a.description || '';
+        document.getElementById('album-image-url').value = a.image_url;
+        document.getElementById('album-form-title').textContent = '앨범 수정 중 (id: ' + a.id + ')';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function resetAlbumForm() {
+        document.getElementById('album-id').value = '';
+        document.getElementById('album-date').value = '';
+        document.getElementById('album-title-input').value = '';
+        document.getElementById('album-description').value = '';
+        document.getElementById('album-image-url').value = '';
+        document.getElementById('album-form-title').textContent = '새 앨범 추가';
+    }
+
+    async function saveAlbum() {
+        const id = document.getElementById('album-id').value;
+        const body = {
+            date: document.getElementById('album-date').value,
+            title: document.getElementById('album-title-input').value.trim(),
+            description: document.getElementById('album-description').value.trim() || null,
+            image_url: document.getElementById('album-image-url').value.trim(),
+        };
+        if (!body.date || !body.title || !body.image_url) {
+            return showToast('날짜, 제목, 이미지 URL을 입력하세요', true);
+        }
+        try {
+            if (id) {
+                await apiCall('/api/albums?id=' + id, 'PUT', body);
+                showToast('앨범을 수정했습니다');
+            } else {
+                await apiCall('/api/albums', 'POST', body);
+                showToast('앨범을 추가했습니다');
+            }
+            resetAlbumForm();
+            loadAlbums();
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    }
+
+    async function deleteAlbum(id) {
+        if (!confirm('이 앨범을 삭제하시겠습니까?')) return;
+        try {
+            await apiCall('/api/albums?id=' + id, 'DELETE');
+            showToast('앨범을 삭제했습니다');
+            loadAlbums();
+        } catch (e) {
+            showToast(e.message, true);
+        }
+    }
+</script>
+</body>
+</html>

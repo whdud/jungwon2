@@ -1869,46 +1869,18 @@
     
     <script>
         // ==========================================
-        // 🔧 구글 시트 설정 (관리자가 수정하는 부분)
+        // PostgreSQL 백엔드 API (Vercel Functions)
         // ==========================================
-        
-        // 여기에 구글 시트 ID를 입력하세요
-        // 예시: https://docs.google.com/spreadsheets/d/1abc123def456/edit
-        // → SHEET_ID는 '1abc123def456' 부분입니다
-        const SHEET_ID = '1h6SfrU1TWXIjk1Ou2Jkmwc8D2DezrYdt8L2MwhGXBFE';
-        
-        // ==========================================
-        
-        
-        // 구글 시트에서 공지사항 불러오기
+
+        // PostgreSQL에서 공지사항 불러오기
         async function loadNotices() {
             const noticeList = document.getElementById('notice-list');
-            
-            // 구글 시트 ID가 설정되지 않은 경우
-            if (SHEET_ID === '여기에_구글시트_ID를_입력하세요') {
-                noticeList.innerHTML = `
-                    <div class="notice-empty">
-                        <h3>🔧 설정이 필요합니다</h3>
-                        <p>관리자: 구글 시트 ID를 설정해주세요</p>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
-                            설정 방법은 함께 제공된 가이드를 참고하세요
-                        </p>
-                    </div>
-                `;
-                return;
-            }
-            
+
             try {
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=공지사항`;
-                const response = await fetch(url);
-                const csvText = await response.text();
-                
-                // CSV 파싱
-                const rows = parseCSV(csvText);
-                
-                // 첫 행(헤더)을 제외하고 데이터 가져오기
-                const notices = rows.slice(1).filter(row => row[0]); // 빈 행 제외
-                
+                const response = await fetch('/api/notices');
+                if (!response.ok) throw new Error('API 호출 실패');
+                const notices = await response.json();
+
                 if (notices.length === 0) {
                     noticeList.innerHTML = `
                         <div class="notice-empty">
@@ -1918,41 +1890,35 @@
                     `;
                     return;
                 }
-                
-                // 공지사항 카드 생성 (최신순으로 표시)
-                noticeList.innerHTML = notices.reverse().map((notice, index) => {
-                    const [date, title, content, isImportant] = notice;
-                    const badge = isImportant?.toLowerCase() === 'true' || isImportant === '중요' ?
+
+                // 공지사항 카드 생성 (API가 이미 최신순으로 정렬)
+                noticeList.innerHTML = notices.map((notice, index) => {
+                    const badge = notice.is_important ?
                         '<span class="notice-badge">중요</span>' : '';
 
                     return `
                         <div class="notice-card animate-on-scroll fade-in-up" onclick="openNoticeModal(${index})">
                             ${badge}
-                            <div class="notice-date">${formatDate(date)}</div>
-                            <h3 class="notice-title">${escapeHtml(title)}</h3>
-                            <div class="notice-content">${formatContent(content)}</div>
+                            <div class="notice-date">${formatDate(notice.date)}</div>
+                            <h3 class="notice-title">${escapeHtml(notice.title)}</h3>
+                            <div class="notice-content">${formatContent(notice.content)}</div>
                         </div>
                     `;
                 }).join('');
 
                 // 공지사항 데이터를 전역 변수에 저장 (모달에서 사용)
                 window.noticesData = notices;
-                
+
                 // 새로 추가된 요소들에 애니메이션 적용
                 const newElements = document.querySelectorAll('.notice-card.animate-on-scroll');
                 newElements.forEach(el => observer.observe(el));
-                
+
             } catch (error) {
                 console.error('공지사항 불러오기 실패:', error);
                 noticeList.innerHTML = `
                     <div class="notice-empty">
                         <h3>⚠️ 공지사항을 불러올 수 없습니다</h3>
-                        <p>구글 시트 설정을 확인해주세요</p>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
-                            1. 시트가 "웹에 게시" 되어있는지 확인<br>
-                            2. 시트 이름이 "공지사항"인지 확인<br>
-                            3. 열 순서: 날짜, 제목, 내용, 중요여부
-                        </p>
+                        <p>잠시 후 다시 시도해주세요</p>
                     </div>
                 `;
             }
@@ -1963,30 +1929,19 @@
         let currentMonth = new Date().getMonth();
         let calendarEvents = [];
 
-        // 구글 시트에서 일정 불러오기
+        // PostgreSQL에서 일정 불러오기
         async function loadCalendar() {
-            if (SHEET_ID === '여기에_구글시트_ID를_입력하세요') {
-                return;
-            }
-
             try {
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=일정`;
-                const response = await fetch(url);
-                const csvText = await response.text();
+                const response = await fetch('/api/events');
+                if (!response.ok) throw new Error('API 호출 실패');
+                const events = await response.json();
 
-                // CSV 파싱
-                const rows = parseCSV(csvText);
-
-                // 첫 행(헤더)을 제외하고 데이터 가져오기
-                calendarEvents = rows.slice(1).filter(row => row[0]).map(row => {
-                    const [date, title, content, time] = row;
-                    return {
-                        date: new Date(date),
-                        title,
-                        content,
-                        time
-                    };
-                });
+                calendarEvents = events.map(e => ({
+                    date: new Date(e.date),
+                    title: e.title,
+                    content: e.content || '',
+                    time: e.time || ''
+                }));
 
                 renderCalendar();
 
@@ -2145,30 +2100,14 @@
             return url;
         }
 
-        // 구글 시트에서 앨범 불러오기
+        // PostgreSQL에서 앨범 불러오기
         async function loadGallery() {
             const galleryList = document.getElementById('gallery-list');
 
-            if (SHEET_ID === '여기에_구글시트_ID를_입력하세요') {
-                galleryList.innerHTML = `
-                    <div class="gallery-empty">
-                        <h3>🔧 설정이 필요합니다</h3>
-                        <p>관리자: 구글 시트 ID를 설정해주세요</p>
-                    </div>
-                `;
-                return;
-            }
-
             try {
-                const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv&sheet=앨범`;
-                const response = await fetch(url);
-                const csvText = await response.text();
-
-                // CSV 파싱
-                const rows = parseCSV(csvText);
-
-                // 첫 행(헤더)을 제외하고 데이터 가져오기
-                const photos = rows.slice(1).filter(row => row[0]); // 빈 행 제외
+                const response = await fetch('/api/albums');
+                if (!response.ok) throw new Error('API 호출 실패');
+                const photos = await response.json();
 
                 if (photos.length === 0) {
                     galleryList.innerHTML = `
@@ -2180,17 +2119,15 @@
                     return;
                 }
 
-                // 앨범 카드 생성 (최신순으로 표시)
-                galleryList.innerHTML = photos.reverse().map((photo, index) => {
-                    const [date, title, description, imageUrl] = photo;
-
+                // 앨범 카드 생성 (API가 이미 최신순으로 정렬)
+                galleryList.innerHTML = photos.map((photo, index) => {
                     return `
                         <div class="gallery-item animate-on-scroll fade-in-up" onclick="openGalleryModal(${index})">
-                            <img src="${convertDriveUrl(imageUrl)}" alt="${escapeHtml(title)}" class="gallery-image" loading="lazy">
+                            <img src="${convertDriveUrl(photo.image_url)}" alt="${escapeHtml(photo.title)}" class="gallery-image" loading="lazy">
                             <div class="gallery-info">
-                                <div class="gallery-date">${formatDate(date)}</div>
-                                <h3 class="gallery-title">${escapeHtml(title)}</h3>
-                                <p class="gallery-description">${escapeHtml(description)}</p>
+                                <div class="gallery-date">${formatDate(photo.date)}</div>
+                                <h3 class="gallery-title">${escapeHtml(photo.title)}</h3>
+                                <p class="gallery-description">${escapeHtml(photo.description || '')}</p>
                             </div>
                         </div>
                     `;
@@ -2208,12 +2145,7 @@
                 galleryList.innerHTML = `
                     <div class="gallery-empty">
                         <h3>⚠️ 사진을 불러올 수 없습니다</h3>
-                        <p>구글 시트 설정을 확인해주세요</p>
-                        <p style="margin-top: 1rem; font-size: 0.9rem; color: #999;">
-                            1. 시트가 "웹에 게시" 되어있는지 확인<br>
-                            2. 시트 이름이 "앨범"인지 확인<br>
-                            3. 열 순서: 날짜, 제목, 설명, 이미지URL
-                        </p>
+                        <p>잠시 후 다시 시도해주세요</p>
                     </div>
                 `;
             }
@@ -2223,13 +2155,13 @@
         function openGalleryModal(index) {
             if (!window.galleryData || !window.galleryData[index]) return;
 
-            const [date, title, description, imageUrl] = window.galleryData[index];
+            const photo = window.galleryData[index];
             const modal = document.getElementById('gallery-modal');
 
-            document.getElementById('modal-gallery-image').src = convertDriveUrl(imageUrl, 'w2000');
-            document.getElementById('modal-gallery-date').textContent = formatDate(date);
-            document.getElementById('modal-gallery-title').textContent = title;
-            document.getElementById('modal-gallery-description').textContent = description;
+            document.getElementById('modal-gallery-image').src = convertDriveUrl(photo.image_url, 'w2000');
+            document.getElementById('modal-gallery-date').textContent = formatDate(photo.date);
+            document.getElementById('modal-gallery-title').textContent = photo.title;
+            document.getElementById('modal-gallery-description').textContent = photo.description || '';
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -2325,15 +2257,15 @@
         function openNoticeModal(index) {
             if (!window.noticesData || !window.noticesData[index]) return;
 
-            const [date, title, content, isImportant] = window.noticesData[index];
+            const notice = window.noticesData[index];
             const modal = document.getElementById('notice-modal');
-            const badge = isImportant?.toLowerCase() === 'true' || isImportant === '중요' ?
+            const badge = notice.is_important ?
                 '<span class="notice-badge">중요</span>' : '';
 
             document.getElementById('modal-notice-badge').innerHTML = badge;
-            document.getElementById('modal-notice-date').textContent = formatDate(date);
-            document.getElementById('modal-notice-title').textContent = title;
-            document.getElementById('modal-notice-content').textContent = content; // pre-wrap으로 줄바꿈 처리
+            document.getElementById('modal-notice-date').textContent = formatDate(notice.date);
+            document.getElementById('modal-notice-title').textContent = notice.title;
+            document.getElementById('modal-notice-content').textContent = notice.content;
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';

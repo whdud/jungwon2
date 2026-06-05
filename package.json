@@ -1,0 +1,15 @@
+{
+  "name": "jungwon",
+  "version": "1.0.0",
+  "description": "하늘사회적협동조합 - 정원지역아동센터 웹사이트 (PostgreSQL 백엔드)",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "pg": "^8.13.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
